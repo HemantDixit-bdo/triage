@@ -1,0 +1,73 @@
+<section class="form-page">
+  <header>
+    <h2>Submit a request</h2>
+    <p class="muted">Your request will be classified automatically.</p>
+  </header>
+
+  <form #f="ngForm" (ngSubmit)="submit(f)" novalidate>
+    <label>
+      Title
+      <input
+        name="title"
+        required
+        maxlength="140"
+        [ngModel]="model().title"
+        (ngModelChange)="update('title', $event)"
+        #title="ngModel"
+      />
+      @if (title.invalid && title.touched) { <small class="error">Title is required.</small> }
+    </label>
+
+    <label>
+      Description
+      <textarea
+        name="description"
+        required
+        rows="5"
+        [ngModel]="model().description"
+        (ngModelChange)="update('description', $event)"
+        #description="ngModel"
+      ></textarea>
+      @if (description.invalid && description.touched) { <small class="error">Description is required.</small> }
+    </label>
+
+    <div class="row">
+      <label>
+        Requester name
+        <input
+          name="requesterName"
+          required
+          [ngModel]="model().requesterName"
+          (ngModelChange)="update('requesterName', $event)"
+          #requesterName="ngModel"
+        />
+        @if (requesterName.invalid && requesterName.touched) { <small class="error">Name is required.</small> }
+      </label>
+      <label>
+        Business unit
+        <input
+          name="businessUnit"
+          required
+          [ngModel]="model().businessUnit"
+          (ngModelChange)="update('businessUnit', $event)"
+          #businessUnit="ngModel"
+        />
+        @if (businessUnit.invalid && businessUnit.touched) { <small class="error">Business unit is required.</small> }
+      </label>
+    </div>
+
+    <label>
+      Context (optional) — paste a log, stack trace, or code snippet
+      <textarea
+        name="context"
+        rows="5"
+        [ngModel]="model().context"
+        (ngModelChange)="update('context', $event)"
+      ></textarea>
+    </label>
+
+    <div class="actions">
+      <button type="submit" class="btn-primary">Submit request</button>
+    </div>
+  </form>
+</section>

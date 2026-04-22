@@ -1,4 +1,9 @@
-<main class="container">
-  <h1>{{ title() }}</h1>
-  <p>Welcome to your new Angular application.</p>
+<header class="app-header">
+  <a class="brand" routerLink="/">
+    <span class="brand-mark">◈</span>
+    <span>{{ title }}</span>
+  </a>
+</header>
+<main class="app-main">
+  <router-outlet />
 </main>

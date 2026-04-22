@@ -1,0 +1,63 @@
+<section class="inbox">
+  <header class="inbox-header">
+    <div>
+      <h2>Request Inbox</h2>
+      <p class="muted">{{ filtered().length }} of {{ triageCount() }} requests</p>
+    </div>
+    <div class="actions">
+      <button type="button" class="btn-secondary" (click)="exportCsv()">Export CSV</button>
+      <a class="btn-primary" routerLink="/new">+ New request</a>
+    </div>
+  </header>
+
+  <div class="filters">
+    <input
+      type="search"
+      placeholder="Search title, description, tags…"
+      [ngModel]="searchText()"
+      (ngModelChange)="searchText.set($event)"
+    />
+    <select [ngModel]="statusFilter()" (ngModelChange)="statusFilter.set($event)">
+      <option value="">All statuses</option>
+      @for (s of statuses; track s) { <option [value]="s">{{ s }}</option> }
+    </select>
+    <select [ngModel]="priorityFilter()" (ngModelChange)="priorityFilter.set($event)">
+      <option value="">All priorities</option>
+      @for (p of priorities; track p) { <option [value]="p">{{ p }}</option> }
+    </select>
+    <select [ngModel]="categoryFilter()" (ngModelChange)="categoryFilter.set($event)">
+      <option value="">All categories</option>
+      @for (c of categories(); track c) { <option [value]="c">{{ c }}</option> }
+    </select>
+    <button type="button" class="btn-link" (click)="clearFilters()">Clear</button>
+  </div>
+
+  @if (filtered().length === 0) {
+    <div class="empty">No requests match the current filters.</div>
+  } @else {
+    <ul class="request-list">
+      @for (r of filtered(); track r.id) {
+        <li>
+          <a [routerLink]="['/requests', r.id]" class="request-row">
+            <div class="row-main">
+              <div class="row-title">{{ r.title }}</div>
+              <div class="row-meta muted">
+                {{ r.requesterName }} · {{ r.businessUnit }} ·
+                {{ r.createdAt | date:'short' }}
+              </div>
+            </div>
+            <div class="row-badges">
+              <span class="badge status-{{ statusClass(r.status) }}">{{ r.status }}</span>
+              @if (r.classifying) {
+                <span class="badge badge-pending">classifying…</span>
+              } @else if (r.classification) {
+                <span class="badge priority-{{ r.classification.priority | lowercase }}">{{ r.classification.priority }}</span>
+                <span class="badge badge-category">{{ r.classification.category }}</span>
+              }
+            </div>
+          </a>
+        </li>
+      }
+    </ul>
+  }
+</section>

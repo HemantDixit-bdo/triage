@@ -1,0 +1,103 @@
+@if (request(); as r) {
+  <section class="detail">
+    <nav class="breadcrumbs">
+      <a routerLink="/">← Back to inbox</a>
+    </nav>
+
+    <header class="detail-header">
+      <div>
+        <h2>{{ r.title }}</h2>
+        <p class="muted">
+          Submitted by {{ r.requesterName }} ({{ r.businessUnit }}) ·
+          {{ r.createdAt | date:'medium' }}
+        </p>
+      </div>
+      <span class="badge status-{{ statusClass(r.status) }}">{{ r.status }}</span>
+    </header>
+
+    <section class="card">
+      <h3>Description</h3>
+      <p class="pre">{{ r.description }}</p>
+      @if (r.context) {
+        <h4>Context</h4>
+        <pre class="context">{{ r.context }}</pre>
+      }
+    </section>
+
+    <section class="card">
+      <h3>Classification</h3>
+      @if (r.classifying) {
+        <p class="muted">Classifying in background…</p>
+      } @else if (r.classification; as c) {
+        <div class="classification-grid">
+          <div><span class="label">Category</span><span class="badge badge-category">{{ c.category }}</span></div>
+          <div><span class="label">Priority</span><span class="badge priority-{{ c.priority | lowercase }}">{{ c.priority }}</span></div>
+          <div class="full"><span class="label">Summary</span><span>{{ c.summary }}</span></div>
+          <div class="full">
+            <span class="label">Tags</span>
+            <span class="tag-list">
+              @for (t of c.tags; track t) { <span class="tag">#{{ t }}</span> }
+            </span>
+          </div>
+        </div>
+      }
+    </section>
+
+    <section class="card">
+      <h3>Status</h3>
+      <div class="status-row">
+        <label>
+          Actor
+          <input [ngModel]="actor()" (ngModelChange)="actor.set($event)" name="actor" />
+        </label>
+        <div class="transitions">
+          @if (allowedNext().length === 0) {
+            <span class="muted">No further transitions available.</span>
+          } @else {
+            @for (next of allowedNext(); track next) {
+              <button type="button" class="btn-secondary" (click)="changeStatus(next)">
+                Move to {{ next }}
+              </button>
+            }
+          }
+        </div>
+      </div>
+
+      <h4>History</h4>
+      <ol class="history">
+        @for (h of r.history; track h.at) {
+          <li>
+            <span class="muted">{{ h.at | date:'short' }}</span> —
+            <strong>{{ h.by }}</strong>
+            @if (h.from) { changed status from <em>{{ h.from }}</em> to <em>{{ h.to }}</em> }
+            @else { created request as <em>{{ h.to }}</em> }
+          </li>
+        }
+      </ol>
+    </section>
+
+    <section class="card">
+      <h3>Similar past requests</h3>
+      @if (similar().length === 0) {
+        <p class="muted">No similar requests found.</p>
+      } @else {
+        <ul class="similar-list">
+          @for (s of similar(); track s.request.id) {
+            <li>
+              <a [routerLink]="['/requests', s.request.id]">
+                <div class="sim-title">{{ s.request.title }}</div>
+                <div class="sim-meta muted">
+                  Score {{ s.score | percent:'1.0-0' }} · {{ s.reasoning }}
+                </div>
+              </a>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+  </section>
+} @else {
+  <section class="detail">
+    <p>Request not found. <a routerLink="/">Back to inbox</a></p>
+  </section>
+}
