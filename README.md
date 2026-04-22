@@ -1,6 +1,6 @@
 # triage
 
-A simple Angular application scaffolded with the Angular CLI (v18).
+A simple Angular application scaffolded with the Angular CLI (v21).
 
 ## Project structure
 
@@ -15,16 +15,16 @@ A simple Angular application scaffolded with the Angular CLI (v18).
     ├── main.ts             # Bootstrap entry point
     ├── styles.css          # Global styles
     └── app/
-        ├── app.component.ts
-        ├── app.component.html
-        ├── app.component.css
-        ├── app.component.spec.ts
+        ├── app.ts          # Root standalone component
+        ├── app.html
+        ├── app.css
+        ├── app.spec.ts
         └── app.config.ts
 ```
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) 18.19+ or 20.11+
+- [Node.js](https://nodejs.org/) ^20.19 or ^22.12 or >=24
 - npm 10+
 
 ## Getting started
